@@ -1,41 +1,16 @@
-<style>
-
-h2 {
-    color: Yellow;
-    font-weight:400;
-    font-size: 20px;
-}
-
-h3 {
-    color: Yellow;
-    font-weight:400;
-    font-size: 20px;
-    text-transform: initial;
-}
-
-.notes {
-    background-color: #342448;
-    margin: 1.5em
-}
-.notesContent {
-    color: bisque;
-    margin: 2m
-}
-
-</style>
-
 # Introduction
 
-This program is designed of stamping specific folder in the user primary mailbox or online archive folder with retention or archive retention policy tag.
+This program is designed for stamping or applying retention or archive policy tag specific folder in the user primary mailbox or online archive folder.
 
 ## Good finding
 
-- Its not mandatory to add the tag you want to apply to folder in the list tags of the MRM Retention Policy assigned to the user account.
+- Its not **mandatory** to add the tag you want to apply to folder in the list tags of the **MRM Retention Policy** assigned to the user account.
 
 ## Used Scenarios
 
 - Prevent specific folder from moving to archive
 - Move specify folder content to Online Archive Mailbox.
+- Applying deletion policy to a specific folder
 
 # Requirements
 
@@ -46,11 +21,11 @@ For the program to work as expected, the following modules and configuration are
 
 - Install the <a href="https://www.powershellgallery.com/packages/MSAL.PS">MSAL.PS</a> module for EWS OAuth access
 - Configure OAuth for EWS. For steps on how to configure. <a href="https://learn.microsoft.com/en-us/exchange/client-developer/exchange-web-services/how-to-authenticate-an-ews-application-by-using-oauth">Authenticate an EWS application by using OAuth | Microsoft Learn</a>
-- Download the <a href="https://github.com/stephenegriffin/mfcmapi/releases" target="_">latest MFCMAPI release</a> from GitHub, it will be used get the critical program parameters such as <b style ="Color:red"> RetentionFlagsValue</b>
+- Download the <a href="https://github.com/stephenegriffin/mfcmapi/releases" target="_">latest MFCMAPI release</a> from GitHub, it will be used retrieve the critical program parameters such as <b style ="Color:red"> RetentionFlagsValue</b>
 
 # Configuring Azure AD Application for EWS OAuth
 
-To use OAuth, an application must have an application ID issued by Azure Active Directory. There you have do the following
+To use OAuth, must use an application ID issued by Azure Active Directory. The following must be complete
 
 - Register your application as a public client with Azure Active Directory.
 - Configure for delegated authentication
@@ -81,10 +56,8 @@ To use OAuth, an application must have an application ID issued by Azure Active 
 ## Configure for delegated authentication
 
 <p>The MRM Policy tagging uses application uses delegated authentication, this is app is an-onbehalf flow and the addition permission is required to be added to the app manifest.
-<div class="notes">
-    <p class=notesContent>
-        The <a href="/en-us/azure/active-directory/develop/v2-overview" target="_">Microsoft identity platform</a> allows apps to request permissions dynamically, so you do not have to pre-configure permissions on the app registration. However, in some scenarios (like the <a href="/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow" target="_">on-behalf-of flow</a>) pre-configuring permissions is required. Use the following steps to pre-configure EWS permissions.</p>
-</div>
+
+>>>>The <a href="/en-us/azure/active-directory/develop/v2-overview" target="_">Microsoft identity platform</a> allows apps to request permissions dynamically, so you do not have to pre-configure permissions on the app registration. However, in some scenarios (like the <a href="/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow" target="_">on-behalf-of flow</a>) pre-configuring permissions is required. Use the following steps to pre-configure EWS permissions.</p>
 
 <ol>
 <li><p>Select <strong>Manifest</strong> in the left-hand navigation under <strong>Manage</strong>.</p>
@@ -100,12 +73,17 @@ To use OAuth, an application must have an application ID issued by Azure Active 
     ]
 }
 </code></pre>
+The complete permission added
+<pre>
+<img src="images/image8.png">
+</pre>
 </li>
 <li><p>Select <strong>Save</strong>.</p></li>
 <li><p>Select <strong>API permissions</strong> under <strong>Manage</strong>. Confirm that the <strong>EWS.AccessAsUser.All</strong> permission is listed.</p></li>
+<img src="images/image9.png">
 </ol>
 
-# How to get critical parameters
+# Critical program parameters
 
 There are three (3) paramter that is consider when it comes to archive mailbox data or retaining mailbox from moving to archive. The part changes depending on the applied policy.
 
@@ -143,11 +121,7 @@ There are three (3) paramter that is consider when it comes to archive mailbox d
 
 Create a new personal retention policy tag and retention policy and assign it to the text mailbox or the shared mailbox
 
-<div class="notes">
-    <p class=notesContent>
-    When a retention policy that contains both retention and archive personal tag. if the archive is not enable for the mailbox, only <i>retention personal tags</i> will show on the mailbox, the <i>archive personal tag</i> will not show because archive is not enable for the target mailbox.
-    </p>
-</div>
+>>>> When a retention policy that contains both retention and archive personal tag. if the archive is not enable for the mailbox, only <i>retention personal tags</i> will show on the mailbox, the <i>archive personal tag</i> will not show because archive is not enable for the target mailbox.
 
 - From <a href="https://compliance.microsoft.com/">Microsoft Purview portal</a> Select **Data lifecycle management** > Select **Exchange (legacy)**
 - Select the **MRM Retentin tags** tab > create a new tag personal tag per your requirement.
