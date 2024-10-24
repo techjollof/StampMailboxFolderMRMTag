@@ -1,27 +1,35 @@
-# This function will automatically change current folder to the current extracted folder location
-function prompt {
-    $p = Split-Path -leaf -path (Get-Location)
-    "$p> "
-}
-prompt
-
-# Retrive the data from the TXT file
-$RetirveValue = Get-Content -Path ".\EWSRequiredParameters.txt" | ForEach-Object {
-    ConvertFrom-StringData $($_ -join [Environment]::NewLine)
+# Function to read and convert parameters from a file
+function Read-Parameters {
+    param (
+        [string]$FilePath
+    )
+    return Get-Content -Path $FilePath | ForEach-Object {
+        ConvertFrom-StringData $_
+    }
 }
 
-#Remapping value from the retrived data set
-$RetirveParValue = @{
-    TargetFolderName 			        = 	$RetirveValue.TargetFolderName
-    ArchiveOrRetentionTagRawRetentionId =  	$RetirveValue.ArchiveOrRetentionTagRawRetentionId
-    RetentionFlagsValue			        =	$RetirveValue.RetentionFlagsValue
-    ArchiveOrRetentionPeriodInDays     	=   $RetirveValue.ArchiveOrRetentionPeriodInDays
-    TenantInitialDomain			        =	$RetirveValue.TenantInitialDomain
-    AzureEWSApplicationClientId		    = 	$RetirveValue.AzureEWSApplicationClientId
-    TargetUserAccountsCsv			    =	$RetirveValue.TargetUserAccountsCsv
-    TargetFolderLocation			    = 	$RetirveValue.TargetFolderLocation
-    ArchiveOrRetainAction               =   $RetirveValue.ArchiveOrRetainAction
+# Read the parameters from both files
+$RetrieveValue = Read-Parameters ".\EWSRequiredParameters.txt"
+
+# Check if parameters were retrieved successfully
+if (-not $RetrieveValue) {
+    Write-Host "Failed to retrieve parameters from EWSRequiredParameters.txt" -ForegroundColor Red
 }
 
-#Cast the values to the main program file
-.\EWSMRMPolicyTagAssignment.ps1 @RetirveParValue
+
+# Remapping values from the retrieved data set
+$RetrieveParValue = @{
+    TargetFolderName                     = $RetrieveValue.TargetFolderName
+    ArchiveOrRetentionTagRawRetentionId  = $RetrieveValue.ArchiveOrRetentionTagRawRetentionId
+    RetentionFlagsValue                  = $RetrieveValue.RetentionFlagsValue
+    ArchiveOrRetentionPeriodInDays       = $RetrieveValue.ArchiveOrRetentionPeriodInDays
+    TenantInitialDomain                  = $RetrieveValue.TenantInitialDomain
+    AzureEWSApplicationClientId          = $RetrieveValue.AzureEWSApplicationClientId
+    TargetUserAccountsCsv                = $RetrieveValue.TargetUserAccountsCsv
+    TargetFolderLocation                  = $RetrieveValue.TargetFolderLocation
+    ArchiveOrRetainAction                = $RetrieveValue.ArchiveOrRetainAction
+}
+
+
+# Call the next script with the parameter values
+.\EWSMRMPolicyTagAssignment.ps1 @RetrieveParValue
